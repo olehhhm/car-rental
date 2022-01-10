@@ -1,19 +1,32 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/joho/godotenv"
+	"github.com/olehhhm/car-rental/config"
+	"github.com/olehhhm/car-rental/routes"
 )
 
+func init() {
+	// loads values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		log.Print("No .env file found")
+	}
+}
+
 func main() {
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Luke, I am Your Server."))
-	})
-	fmt.Println("Log")
-	http.ListenAndServe(":3000", r)
+	// Creating config value
+	conf := config.New()
+
+	// Setup routes
+	router := chi.NewRouter()
+	router.Use(middleware.Logger)
+	router.Get("/", routes.Home)
+
+	// Setup port
+	http.ListenAndServe(":"+conf.ServerPort, router)
 }
