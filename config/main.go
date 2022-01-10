@@ -9,6 +9,8 @@ import (
 type DatabaseConfig struct {
 	Username string
 	Password string
+	Name     string
+	Host     string
 	Port     string
 }
 
@@ -24,6 +26,8 @@ func New() *Config {
 		DatabaseConfig: DatabaseConfig{
 			Username: getEnv("DATABASE_USERNAME", ""),
 			Password: getEnv("DATABASE_PASSWORD", ""),
+			Name:     getEnv("DATABASE_NANE", ""),
+			Host:     getEnv("DATABASE_HOST", ""),
 			Port:     getEnv("DATABASE_PORT", ""),
 		},
 		ServerPort: getEnv("SERVER_PORT", ""),

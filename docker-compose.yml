@@ -6,3 +6,12 @@ services:
       - '3000:3000'
     volumes:
       - ./:/app
+
+  car-rental-db-image:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: car_rental_development
+    ports:
+      - 3308:3306
