@@ -15,9 +15,8 @@ func CarColorRoute(route chi.Router) {
 }
 
 func GetCarColors(w http.ResponseWriter, r *http.Request) {
-	models.GetCarColors()
 	resp := utils.Message(true, "success")
-	resp["colors"] = models.GetCarColors()
+	resp["result"] = models.GetCarColors()
 	utils.Respond(w, resp)
 }
 

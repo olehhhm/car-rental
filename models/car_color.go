@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-const TableName = "car_colors"
+const CarColorTableName = "car_colors"
 
 type CarColor struct {
 	gorm.Model
@@ -46,7 +46,7 @@ func (color *CarColor) Create() map[string]interface{} {
 func GetCarColors() []*CarColor {
 	colors := make([]*CarColor, 0)
 
-	err := GetDB().Table(TableName).Find(&colors).Error
+	err := GetDB().Table(CarColorTableName).Find(&colors).Error
 	if err != nil {
 		fmt.Println(err)
 		return nil

@@ -15,7 +15,8 @@ func main() {
 		conf.DatabaseConfig.Password,
 		conf.DatabaseConfig.Host,
 		conf.DatabaseConfig.Port,
-		conf.DatabaseConfig.Name)
+		conf.DatabaseConfig.Name,
+		conf.DebugMode)
 
 	routes.Init()
 }
