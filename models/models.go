@@ -37,6 +37,6 @@ func Init(username string, password string, host string, port string, name strin
 		panic(err)
 	}
 
-	conn.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&Car{}, &CarColor{})
+	conn.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&Car{}, &CarColor{}, &CarBooking{})
 	db = conn
 }

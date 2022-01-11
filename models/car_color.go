@@ -5,14 +5,13 @@ import (
 
 	"github.com/olehhhm/car-rental/config"
 	"github.com/olehhhm/car-rental/utils"
-	"gorm.io/gorm"
 )
 
 const CarColorTableName = "car_colors"
 
 type CarColor struct {
-	gorm.Model
-	Name string `gorm:"unique;not null"`
+	ID   uint   `gorm:"primary_key" json:"id"`
+	Name string `json:"name" gorm:"unique;not null"`
 }
 
 func (color *CarColor) Validate() (map[string]interface{}, bool) {
@@ -39,7 +38,7 @@ func (color *CarColor) Create() map[string]interface{} {
 	}
 
 	resp := utils.Message(true, "success")
-	resp["color"] = color
+	resp["result"] = color
 	return resp
 }
 

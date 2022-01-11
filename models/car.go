@@ -2,19 +2,22 @@ package models
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/olehhhm/car-rental/config"
 	"github.com/olehhhm/car-rental/utils"
-	"gorm.io/gorm"
 )
 
 const CarTableName = "cars"
 
 type Car struct {
-	gorm.Model
-	Name    string `gorm:"unique;not null"`
-	Color   *CarColor
-	ColorID int
+	ID        uint       `gorm:"primary_key" json:"id"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at"`
+	Name      string     `json:"name" gorm:"unique;not null"`
+	Color     *CarColor  `json:"car_color"`
+	ColorID   int        `json:"color_id"`
 }
 
 func (car *Car) Validate() (map[string]interface{}, bool) {
@@ -53,7 +56,7 @@ func (car *Car) Create() map[string]interface{} {
 	}
 
 	resp := utils.Message(true, "success")
-	resp["car"] = car
+	resp["result"] = car
 	return resp
 }
 
@@ -64,6 +67,48 @@ func GetCar(id int) *Car {
 		return nil
 	}
 	return car
+}
+
+func GetAvailableCars(startDate time.Time, endDate time.Time) []*Car {
+	bookings := make([]*CarBooking, 0)
+	err := GetDB().
+		Select("car_id").
+		Table(CarBookingTableName).
+		Where("start_date >= ? AND ((? BETWEEN start_date AND end_date) OR (? BETWEEN start_date AND end_date))",
+			time.Now(),
+			startDate,
+			endDate).
+		Group("car_id").
+		Find(&bookings).
+		Error
+
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	if len(bookings) == 0 {
+		return GetCars()
+	}
+
+	bookedCarIds := make([]int, 0)
+	for _, book := range bookings {
+		bookedCarIds = append(bookedCarIds, book.CarID)
+	}
+
+	cars := make([]*Car, 0)
+	err = GetDB().
+		Table(CarTableName).
+		Preload("Color").
+		Where("id NOT IN (?)", bookedCarIds).
+		Find(&cars).
+		Error
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	return cars
 }
 
 func GetCars() []*Car {

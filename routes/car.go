@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/olehhhm/car-rental/models"
@@ -14,11 +15,49 @@ import (
 func CarRoute(route chi.Router) {
 	route.Get("/", GetCars)
 	route.Post("/", CreateCar)
+	route.Get("/available", GetAvailableCarForBooking)
 	route.Route("/{carID}", func(r chi.Router) {
 		r.Get("/", GetCar)
 		r.Delete("/", DeleteCar)
+		r.Route("/booking", CarBookingRoute)
 	})
 	route.Route("/color", CarColorRoute)
+}
+
+func GetAvailableCarForBooking(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL.RawQuery)
+
+	dateLayout := time.RFC3339
+	startDateParam := r.URL.Query().Get("start_date")
+	startDate, err := time.Parse(dateLayout, startDateParam)
+
+	if err != nil {
+		fmt.Println(err)
+		utils.Respond(w, utils.Message(false, "start_date is not valid"))
+		return
+	}
+
+	endDateParam := r.URL.Query().Get("end_date")
+	endDate, err := time.Parse(dateLayout, endDateParam)
+	if err != nil {
+		fmt.Println(err)
+		utils.Respond(w, utils.Message(false, "end_date is not valid"))
+		return
+	}
+
+	if time.Now().Unix() > startDate.Unix() {
+		utils.Respond(w, utils.Message(false, "Booking start date can't be in past"))
+		return
+	}
+
+	if endDate.Unix() <= startDate.Unix() {
+		utils.Respond(w, utils.Message(false, "Booking end date must be bigger than start date"))
+		return
+	}
+
+	resp := utils.Message(true, "success")
+	resp["result"] = models.GetAvailableCars(startDate, endDate)
+	utils.Respond(w, resp)
 }
 
 func GetCar(w http.ResponseWriter, r *http.Request) {
