@@ -22,18 +22,18 @@ SERVER_PORT=3000
 
 ## Supported endpoint
 ```
-GET - https://{host}/ - home endpoint
-POST - https://{host}/car - create car
-GET - https://{host}/car - get list of all cars
-GET - https://{host}/car/color - get car collors
-POST - https://{host}/car/color - create new car collor
-GET - https://{host}/car/available?start_date=2022-02-01T12:00:00Z&end_date=2022-02-13T12:00:00Z - get list of available cars on selected dates
-GET - https://{host}/car/{carID} - get specific car
-DELETE - https://{host}/car/{carID} - delete a specific car
-GET - https://{host}/car/{carID}/booking - get all booking for a specific car
-POST - https://{host}/car/{carID}/booking - create booking for a specific car
-GET - https://{host}/car/{carID}/booking/{bookingID} - get info about a specific booking
-DELETE - https://{host}/car/{carID}/booking/{bookingID} - delete a specific booking
+GET - http://{host}/ - home endpoint
+POST - http://{host}/car - create car
+GET - http://{host}/car - get list of all cars
+GET - http://{host}/car/color - get car collors
+POST - http://{host}/car/color - create new car collor
+GET - http://{host}/car/available?start_date=2022-02-01T12:00:00Z&end_date=2022-02-13T12:00:00Z - get list of available cars on selected dates
+GET - http://{host}/car/{carID} - get specific car
+DELETE - http://{host}/car/{carID} - delete a specific car
+GET - http://{host}/car/{carID}/booking - get all booking for a specific car
+POST - http://{host}/car/{carID}/booking - create booking for a specific car
+GET - http://{host}/car/{carID}/booking/{bookingID} - get info about a specific booking
+DELETE - http://{host}/car/{carID}/booking/{bookingID} - delete a specific booking
 ```
 
 ## Good to be done if it were real API:
